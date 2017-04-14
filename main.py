@@ -1,19 +1,3 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import os
 import jinja2
 import webapp2
@@ -23,12 +7,9 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
 def get_posts(lim, off):
-    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5 OFFSET 5")
 
-    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC limit :lim offset :off" , lim = lim, off = off)
-    #return posts
 
-    query = BlogPost.all().order('-created')  #THis is a bad way to do it when the DB is large...
+    query = BlogPost.all().order('-created')
     return query.fetch(limit=lim, offset=off)
 
 class Handler(webapp2.RequestHandler):
@@ -89,12 +70,12 @@ class NewPostHandler(Handler):
         content = self.request.get("content")
 
         if subject and content:
-            a = BlogPost(subject=subject, content = content) #create art object from the database class
+            a = BlogPost(subject=subject, content = content)
             a.put() #store entity in the database
             id = a.key().id()
             self.redirect("/blog/"+ str(id))
         else:
-            error = "we need a subject and content!"
+            error = "Please provide a subject and content!"
             self.render_blogpost(subject, content, error)
 
 class ViewPostHandler(Handler):
